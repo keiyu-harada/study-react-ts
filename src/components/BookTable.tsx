@@ -16,13 +16,26 @@ import Alert from "@mui/material/Alert";
 
 export default function BookTable() {
   const [books, setBooks] = useState<[]|Book[]>([]);
+  // Errorメッセージを出す用
   const [message, setMessage] = useState<JSX.Element>();
+  // ページ切り替える時に使用
   const navigate = useNavigate();
 
   function onClickDelete(id: string) {
     deleteBook(id)
       .then((res) => {
         console.log(res)
+        setBookTable();
+      })
+      .catch((e) => {
+        setMessage(<Alert severity="error">データの削除に失敗しました: {e.message}</Alert>)
+      })
+  }
+
+  function setBookTable() {
+    getBooks()
+      .then((bookList) => {
+        setBooks(bookList);
       })
       .catch((e) => {
         setMessage(<Alert severity="error">データの削除に失敗しました: {e.message}</Alert>)
@@ -33,14 +46,12 @@ export default function BookTable() {
     navigate(`details/${bookId}`)
   }
 
+  /*
+   useEffectを使用しないと無限にAPIを叩く
+    第二引数がないと再描画時に実行し続けてしまう
+   */
   useEffect(()=> {
-    getBooks()
-      .then((bookList) => {
-        setBooks(bookList);
-      })
-      .catch((e) => {
-        setMessage(<Alert severity="error">データの削除に失敗しました: {e.message}</Alert>)
-      })
+    setBookTable();
   }, []);
 
   return (

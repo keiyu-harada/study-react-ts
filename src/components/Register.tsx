@@ -35,10 +35,10 @@ export default function RegisterPage(){
     <div>
       <Header />
       <br />
+      {message}
       <Grid container>
         <Grid xs />
         <Grid xs={9}>
-          {message}
           <br/>
           <form onSubmit={handleSubmit(onClickAdd)}>
             <div>
