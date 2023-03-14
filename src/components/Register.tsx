@@ -1,8 +1,8 @@
 import Header from "./Header";
 import Footer from "./Footer";
 import {SubmitHandler, useForm} from "react-hook-form";
-import {Book} from "./models/Book";
-import {addBook} from "./api";
+import {Book} from "../models/Book";
+import {addBook} from "../api";
 import {useState} from "react";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";

@@ -1,9 +1,9 @@
 import {useParams} from "react-router-dom";
-import {getBook, updateBook} from "./api";
+import {getBook, updateBook} from "../api";
 import {useEffect, useState} from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import {Book, toOnlyDate} from "./models/Book";
+import {Book, toOnlyDate} from "../models/Book";
 import {SubmitHandler, useForm} from "react-hook-form";
 import TextField from '@mui/material/TextField';
 import Typography from "@mui/material/Typography";

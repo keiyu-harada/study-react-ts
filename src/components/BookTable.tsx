@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {Book} from "./models/Book";
-import {deleteBook, getBooks} from "./api";
+import {Book} from "../models/Book";
+import {deleteBook, getBooks} from "../api";
 import {useNavigate} from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
