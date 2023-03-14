@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import {getBook, updateBook} from "../api";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Header from "./Header";
 import {Book, toOnlyDate} from "../models/Book";
 import {SubmitHandler, useForm} from "react-hook-form";
@@ -13,18 +13,19 @@ export default function DetailsPage() {
   const params = useParams().id;
   const bookId = params === void 0 ? "" : params;
   const [message, setMessage] = useState<JSX.Element>();
-  let oldBook: Book;
+  const [values, setValues] = useState<Book[]|[]>([]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
+    getValues
   } = useForm<Book>({
   });
 
   const onClickUpdate: SubmitHandler<Book> = (newBook: Book) => {
-    updateBook(newBook, oldBook, bookId)
+    updateBook(newBook, values[0], bookId)
       .then((code) => {
         if(code === 200){
           setMessage(<Alert severity="info">データの更新に成功しました</Alert>);
@@ -35,19 +36,19 @@ export default function DetailsPage() {
       })
   }
 
-  getBook(bookId)
-    .then((res: Book) => {
-      oldBook = res;
-      setValue("name", res.name);
-      res.author !== null ? setValue("author", res.author) : setValue("author", "");
-      res.published_date !== null ? setValue("published_date", toOnlyDate(res.published_date)) : setValue("published_date", "0000-00-00");
-      res.description !== null ? setValue("description", res.description) : setValue("description", "");
-    })
-    .catch((e) => {
-      setMessage(<Alert severity="error">データの取得に失敗しました: {e.message}</Alert>);
-    })
-
-  console.log(errors.name?.message)
+  useEffect(() => {
+    getBook(bookId)
+      .then((res: Book) => {
+        setValue("name", res.name);
+        res.author !== null ? setValue("author", res.author) : setValue("author", "");
+        res.published_date !== null ? setValue("published_date", toOnlyDate(res.published_date)) : setValue("published_date", "0000-00-00");
+        res.description !== null ? setValue("description", res.description) : setValue("description", "");
+        setValues([getValues()]);
+      })
+      .catch((e) => {
+        setMessage(<Alert severity="error">データの取得に失敗しました: {e.message}</Alert>);
+      })
+  }, [])
 
   return (
     <div>

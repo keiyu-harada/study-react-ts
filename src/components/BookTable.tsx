@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Book} from "../models/Book";
 import {deleteBook, getBooks} from "../api";
 import {useNavigate} from "react-router-dom";
@@ -33,13 +33,15 @@ export default function BookTable() {
     navigate(`details/${bookId}`)
   }
 
-  getBooks()
-    .then((bookList) => {
-      setBooks(bookList);
-    })
-    .catch((e) => {
-      setMessage(<Alert severity="error">データの削除に失敗しました: {e.message}</Alert>)
-    })
+  useEffect(()=> {
+    getBooks()
+      .then((bookList) => {
+        setBooks(bookList);
+      })
+      .catch((e) => {
+        setMessage(<Alert severity="error">データの削除に失敗しました: {e.message}</Alert>)
+      })
+  }, []);
 
   return (
     <TableContainer component={Paper}>
