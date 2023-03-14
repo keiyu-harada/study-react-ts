@@ -1,11 +1,9 @@
 import Header from "./Header";
-import Footer from "./Footer";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {Book} from "../models/Book";
 import {addBook} from "../api";
 import {useState} from "react";
 import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
 import Button from "@mui/material/Button";
 import Alert from '@mui/material/Alert';
@@ -25,12 +23,11 @@ export default function RegisterPage(){
       .then((code) => {
         if(code === 200){
           reset();
-          setMessage(<Alert severity="info">登録に成功しました</Alert>);
+          setMessage(<Alert severity="info">データの登録に成功しました</Alert>);
         }
       })
       .catch((e) => {
-        console.error(e.message)
-        setMessage(<Alert severity="error">登録に失敗しました</Alert>)
+        setMessage(<Alert severity="error">データの登録に失敗しました" {e.message}</Alert>)
       })
   }
 
@@ -45,39 +42,45 @@ export default function RegisterPage(){
           <br/>
           <form onSubmit={handleSubmit(onClickAdd)}>
             <div>
-              <Typography variant="body1" gutterBottom>書籍名 *</Typography>
               <TextField
                 fullWidth
                 {...register("name", {required: true})}
                 variant="standard"
+                InputLabelProps={{ shrink: true }}
+                label="書籍名*"
+                error={errors.name && true}
+                helperText={errors.name && true ? "1文字以上入力してください" : ""}
               />
             </div>
             <br />
             <div>
-              <Typography variant="body1" gutterBottom>著者名</Typography>
               <TextField
                 fullWidth
                 {...register("author")}
                 variant="standard"
+                InputLabelProps={{ shrink: true }}
+                label="著者名"
               />
             </div>
             <br />
             <div>
-              <Typography variant="body1" gutterBottom>発行日</Typography>
               <TextField
                 fullWidth
                 {...register("published_date")}
                 type="date"
                 variant="standard"
+                InputLabelProps={{ shrink: true }}
+                label="発行日"
               />
             </div>
             <br />
             <div>
-              <Typography variant="body1" gutterBottom>説明</Typography>
               <TextField
                 fullWidth
                 {...register("description")}
                 variant="standard"
+                InputLabelProps={{ shrink: true }}
+                label="説明"
               />
             </div>
             <br />
@@ -88,7 +91,6 @@ export default function RegisterPage(){
         </Grid>
         <Grid xs />
       </Grid>
-      <Footer></Footer>
     </div>
   )
 }

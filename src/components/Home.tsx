@@ -1,5 +1,4 @@
 import BookTable from "./BookTable";
-import Footer from "./Footer";
 import Header from "./Header";
 
 export default function Home() {
@@ -8,7 +7,6 @@ export default function Home() {
     <div className="App">
       <Header />
       <BookTable />
-      <Footer />
     </div>
 
   )

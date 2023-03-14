@@ -1,16 +1,16 @@
-import axios, {Axios, AxiosResponse, isAxiosError} from "axios";
-import { Book } from "./models/Book";
+import axios, {AxiosResponse, isAxiosError} from "axios";
+import {Book} from "./models/Book";
 
-// 全書籍情報取得
 export async function getBooks(): Promise<Book[]> {
   try {
     const response: AxiosResponse = await axios.get("http://localhost:4000/books");
     return response.data;
   } catch (e: unknown) {
+    console.log(`getBooks: ${e}`)
     if(isAxiosError(e)){
       throw new Error(`${e.code}: ${e.message}`);
     }
-    throw new Error("データを取得できませんでした/詳細不明")
+    throw new Error(`getBooks: ${e}`)
   }
 }
 
@@ -19,10 +19,52 @@ export async function getBook(id: string): Promise<Book> {
     const response = await axios.get(`http://localhost:4000/books/${id}`);
     return response.data[0];
   } catch (e: unknown) {
+    console.log(`getBook: ${e}`)
     if(isAxiosError(e)){
       throw new Error(`${e.code}: ${e.message}`);
     }
-    throw new Error("データを取得できませんでした/詳細不明")
+    throw new Error(`getBook: ${e}`)
+  }
+}
+
+export async function addBook(book: Book): Promise<number> {
+  try {
+    const params = toParams(book);
+    const response = await axios.post("http://localhost:4000/books/add", params);
+    return response.status;
+  } catch (e: unknown) {
+    console.log(`addBook: ${e}`)
+    if(isAxiosError(e)){
+      throw new Error(`${e.code}: ${e.message}`);
+    }
+    throw new Error(`addBook: ${e}`)
+  }
+}
+
+export async function deleteBook(bookId: string): Promise<number> {
+  try {
+    const response = await axios.delete(`http://localhost:4000/books/del/${bookId}`);
+    return response.status;
+  } catch (e: unknown) {
+    console.log(`deleteBook: ${e}`)
+    if(isAxiosError(e)){
+      throw new Error(`${e.code}: ${e.message}`);
+    }
+    throw new Error(`deleteBook: ${e}`)
+  }
+}
+
+export async function updateBook(newBook: Book, oldBook: Book, bookId: string): Promise<number> {
+  try {
+    const params: URLSearchParams = createUpdateParams(newBook, oldBook);
+    const response = await axios.put(`http://localhost:4000/books/update/${bookId}`, params);
+    return response.status;
+  } catch (e: unknown) {
+    console.log(`updateBook: ${e}`)
+    if(isAxiosError(e)){
+      throw new Error(`${e.code}: ${e.message}`);
+    }
+    throw new Error(`updateBook: ${e}`)
   }
 }
 
@@ -41,45 +83,6 @@ function toParams(book: Book): URLSearchParams {
     params.append('description', book.description)
   }
   return params;
-}
-
-export async function addBook(book: Book): Promise<number> {
-  try {
-    const params = toParams(book);
-    const response = await axios.post("http://localhost:4000/books/add", params);
-    return response.status;
-  } catch (e: unknown) {
-    if(isAxiosError(e)){
-      throw new Error(`${e.code}: ${e.message}`);
-    }
-    throw new Error("データを登録できませんでした/詳細不明")
-  }
-}
-
-export async function deleteBook(bookId: string): Promise<number> {
-  try {
-    const response = await axios.delete(`http://localhost:4000/books/del/${bookId}`);
-    return response.status;
-  } catch (e: unknown) {
-    if(isAxiosError(e)){
-      throw new Error(`${e.code}: ${e.message}`);
-    }
-    throw new Error("データを削除できませんでした/詳細不明")
-  }
-}
-
-export async function updateBook(newBook: Book, oldBook: Book, bookId: string): Promise<number> {
-  try {
-    const params: URLSearchParams = createUpdateParams(newBook, oldBook);
-    console.log(params.toString())
-    const response = await axios.put(`http://localhost:4000/books/update/${bookId}`, params);
-    return response.status;
-  } catch (e: unknown) {
-    if(isAxiosError(e)){
-      throw new Error(`${e.code}: ${e.message}`);
-    }
-    throw new Error("データを更新できませんでした/詳細不明")
-  }
 }
 
 function createUpdateParams(newBook: Book, oldBook: Book): URLSearchParams {

@@ -1,9 +1,9 @@
 import {useNavigate} from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import {Toolbar} from "@mui/material";
+import Link from '@mui/material/Link';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -21,9 +21,14 @@ export default function Header() {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Link
+              href="/"
+              color="inherit"
+              underline="none"
+              sx={{ flexGrow: 1}}
+            >
               書籍管理システム
-            </Typography>
+            </Link>
             <Button color="inherit" onClick={onClickRegisterPage}>新規作成</Button>
             <Button color="inherit" onClick={onClickHome}>書籍一覧</Button>
           </Toolbar>

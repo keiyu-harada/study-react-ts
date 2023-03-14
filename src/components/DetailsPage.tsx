@@ -1,12 +1,10 @@
 import {useParams} from "react-router-dom";
 import {getBook, updateBook} from "../api";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Header from "./Header";
-import Footer from "./Footer";
 import {Book, toOnlyDate} from "../models/Book";
 import {SubmitHandler, useForm} from "react-hook-form";
 import TextField from '@mui/material/TextField';
-import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
 import Button from "@mui/material/Button";
 import Alert from '@mui/material/Alert';
@@ -22,37 +20,34 @@ export default function DetailsPage() {
     handleSubmit,
     formState: { errors },
     setValue
-  } = useForm<Book>();
-
-  useEffect(() => {
-    getBook(bookId)
-      .then((res: Book) => {
-        oldBook = res;
-        setValue("name", res.name);
-        res.author !== null ? setValue("author", res.author) : setValue("author", "");
-        res.published_date !== null ? setValue("published_date", toOnlyDate(res.published_date)) : setValue("published_date", "0000-00-00");
-        res.description !== null ? setValue("description", res.description) : setValue("description", "");
-      })
-      .catch((e) => {
-        console.log(e);
-        setMessage(<Alert severity="error">データの取得に失敗しました</Alert>);
-      })
-  }, []);
+  } = useForm<Book>({
+  });
 
   const onClickUpdate: SubmitHandler<Book> = (newBook: Book) => {
-    console.log(newBook)
-    console.log(oldBook)
     updateBook(newBook, oldBook, bookId)
       .then((code) => {
         if(code === 200){
-          setMessage(<Alert severity="info">更新に成功しました</Alert>);
+          setMessage(<Alert severity="info">データの更新に成功しました</Alert>);
         }
       })
       .catch((e) => {
-        console.error(e.message)
-        setMessage(<Alert severity="error">更新に失敗しました</Alert>);
+        setMessage(<Alert severity="error">データの更新に失敗しました: {e.message}</Alert>);
       })
   }
+
+  getBook(bookId)
+    .then((res: Book) => {
+      oldBook = res;
+      setValue("name", res.name);
+      res.author !== null ? setValue("author", res.author) : setValue("author", "");
+      res.published_date !== null ? setValue("published_date", toOnlyDate(res.published_date)) : setValue("published_date", "0000-00-00");
+      res.description !== null ? setValue("description", res.description) : setValue("description", "");
+    })
+    .catch((e) => {
+      setMessage(<Alert severity="error">データの取得に失敗しました: {e.message}</Alert>);
+    })
+
+  console.log(errors.name?.message)
 
   return (
     <div>
@@ -65,41 +60,42 @@ export default function DetailsPage() {
           <br/>
           <form onSubmit={handleSubmit(onClickUpdate)}>
             <div>
-              <Typography variant="body1" gutterBottom>書籍名 *</Typography>
               <TextField
                 fullWidth
-                {...register("name", {minLength: 1})}
+                {...register("name", {required: true})}
                 onChange={(e) => setValue("name", e.target.value)}
                 variant="standard"
+                InputLabelProps={{ shrink: true }}
+                label="書籍名*"
+                error={errors.name && true}
+                helperText={errors.name && true ? "1文字以上入力してください" : ""}
               />
-              {errors.name && (
-                <span style={{ color: "red" }}>1文字以上入力してください。</span>
-              )}
             </div>
             <br />
             <div>
-              <Typography variant="body1" gutterBottom>著者名</Typography>
               <TextField
                 fullWidth
                 {...register("author")}
                 onChange={(e) => setValue("author", e.target.value)}
                 variant="standard"
+                InputLabelProps={{ shrink: true }}
+                label="著者名"
               />
             </div>
             <br />
             <div>
-              <Typography variant="body1" gutterBottom>発行日</Typography>
               <TextField
                 fullWidth
                 {...register("published_date")}
                 type="date"
                 onChange={(e) => setValue("published_date", e.target.value)}
                 variant="standard"
+                InputLabelProps={{ shrink: true }}
+                label="発行日"
               />
             </div>
             <br />
             <div>
-              <Typography variant="body1" gutterBottom>説明</Typography>
               <TextField
                 fullWidth
                 multiline
@@ -107,6 +103,8 @@ export default function DetailsPage() {
                 {...register("description")}
                 onChange={(e) => setValue("description", e.target.value)}
                 variant="standard"
+                InputLabelProps={{ shrink: true }}
+                label="説明"
               />
             </div>
             <br />
@@ -117,7 +115,6 @@ export default function DetailsPage() {
         </Grid>
         <Grid xs />
       </Grid>
-      <Footer></Footer>
     </div>
   )
 }
