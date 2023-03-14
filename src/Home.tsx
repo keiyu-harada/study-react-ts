@@ -2,7 +2,7 @@ import BookTable from "./BookTable";
 import Footer from "./Footer";
 import Header from "./Header";
 
-export default function App() {
+export default function Home() {
 
   return (
     <div className="App">
