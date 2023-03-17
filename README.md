@@ -19,10 +19,10 @@ $ npx create-react-app <パッケージ名> --template typescript
 
 ### npm
 ```bash
-$ npm install -D react-router-dom
-$ npm install -D react-hook-form
-$ npm install -D axios
-$ npm install -D @mui/material @mui/icons-material @emotion/react @emotion/styled
+$ npm install react-router-dom
+$ npm install react-hook-form
+$ npm install axios
+$ npm install @mui/material @mui/icons-material @emotion/react @emotion/styled
 ```
 
 ## 実行
